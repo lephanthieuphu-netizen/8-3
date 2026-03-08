@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<title>Chúc 8/3</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Segoe UI;
+}
+
+body{
+height:100vh;
+background:linear-gradient(135deg,#ffdde1,#ee9ca7);
+display:flex;
+align-items:center;
+justify-content:center;
+overflow:hidden;
+color:white;
+text-align:center;
+}
+
+/* tim bay */
+
+.floating{
+position:fixed;
+pointer-events:none;
+animation:float linear infinite;
+}
+
+@keyframes float{
+0%{transform:translateY(100vh);opacity:0}
+50%{opacity:1}
+100%{transform:translateY(-120vh);opacity:0}
+}
+
+input{
+padding:14px;
+border:none;
+border-radius:10px;
+font-size:18px;
+margin-top:15px;
+}
+
+button{
+margin-top:15px;
+padding:12px 28px;
+border:none;
+border-radius:10px;
+font-size:18px;
+background:#ff4d88;
+color:white;
+cursor:pointer;
+}
+
+button:hover{
+transform:scale(1.1);
+}
+
+#letterPage{display:none;}
+
+.envelope{
+width:280px;
+height:200px;
+background:#ff6b81;
+margin:auto;
+border-radius:12px;
+position:relative;
+cursor:pointer;
+}
+
+.flap{
+position:absolute;
+width:100%;
+height:100%;
+background:#ff8fa3;
+clip-path:polygon(0 0,100% 0,50% 65%);
+transform-origin:top;
+transition:1s;
+}
+
+.envelope.open .flap{
+transform:rotateX(180deg);
+}
+
+.letter{
+position:absolute;
+width:90%;
+height:85%;
+background:white;
+color:#333;
+left:5%;
+top:10%;
+border-radius:8px;
+padding:15px;
+opacity:0;
+transform:translateY(40px);
+transition:1s;
+}
+
+.envelope.open .letter{
+opacity:1;
+transform:translateY(0);
+}
+
+#gallery{
+display:none;
+flex-direction:column;
+align-items:center;
+}
+
+img{
+width:320px;
+height:400px;
+object-fit:cover;
+border-radius:20px;
+box-shadow:0 15px 35px rgba(0,0,0,0.4);
+}
+
+.message{
+margin-top:20px;
+font-size:20px;
+max-width:500px;
+}
+
+#finalPage{
+display:none;
+position:relative;
+width:100%;
+height:100vh;
+}
+
+.orbitImg{
+position:absolute;
+width:120px;
+height:160px;
+border-radius:15px;
+object-fit:cover;
+transition:2s;
+}
+
+.centerHeart{
+position:absolute;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%) scale(0);
+font-size:150px;
+transition:1s;
+}
+
+.smallHeart{
+position:absolute;
+font-size:20px;
+animation:explode 3s linear forwards;
+}
+
+@keyframes explode{
+0%{transform:translate(0,0) scale(0);opacity:1;}
+100%{transform:translate(var(--x),var(--y)) scale(1.5);opacity:0;}
+}
+
+#finalText{
+position:absolute;
+bottom:160px;
+width:100%;
+font-size:26px;
+padding:0 40px;
+}
+
+#specialText{
+position:absolute;
+bottom:70px;
+width:100%;
+font-size:42px;
+font-weight:bold;
+color:#fff;
+text-shadow:0 0 15px #ff4d88,0 0 25px #ff4d88;
+opacity:0;
+transform:scale(0.5);
+transition:1s;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<!-- NHẠC NỀN -->
+
+<audio id="bgMusic" loop>
+<source src="cunganh.mp3" type="audio/mpeg">
+</audio>
+
+<div id="passwordPage">
+
+<h1 id="t1"></h1>
+<p id="t2"></p>
+
+<input type="password" id="pass" placeholder="Nhập mật khẩu">
+<br>
+<button onclick="checkPass()">Mở quà</button>
+
+</div>
+
+<div id="letterPage">
+
+<h2 id="t3"></h2>
+
+<br>
+
+<div class="envelope" id="env" onclick="openLetter()">
+
+<div class="flap"></div>
+
+<div class="letter" id="letterText"></div>
+
+</div>
+
+<br><br>
+
+<button onclick="startGallery()">Tiếp tục</button>
+
+</div>
+
+<div id="gallery">
+
+<img id="photo">
+
+<div class="message" id="msg"></div>
+
+<button onclick="nextPhoto()">Tiếp tục</button>
+
+</div>
+
+<div id="finalPage">
+
+<div id="orbitContainer"></div>
+
+<div class="centerHeart" id="bigHeart">💖</div>
+
+<div id="finalText"></div>
+
+<div id="specialText">
+Và điều đặc biệt nhất là… nhớ ngoan hơn một chút và đừng bướng nữa nhé 💖
+</div>
+
+</div>
+
+<script>
+
+let typingTimer=null
+
+function typeText(el,text,speed=40){
+
+clearTimeout(typingTimer)
+
+let i=0
+el.innerHTML=""
+
+function typing(){
+
+if(i<text.length){
+el.innerHTML+=text.charAt(i)
+i++
+typingTimer=setTimeout(typing,speed)
+}
+
+}
+
+typing()
+
+}
+
+typeText(t1,"Chúc mừng ngày 8/3")
+typeText(t2,"Một món quà nhỏ dành cho bạn")
+
+const password="03092007"
+
+function checkPass(){
+
+if(pass.value===password){
+
+passwordPage.style.display="none"
+letterPage.style.display="block"
+
+/* bật nhạc */
+document.getElementById("bgMusic").play()
+
+typeText(t3,"Bạn có một lá thư")
+
+}
+
+}
+
+function openLetter(){
+
+env.classList.add("open")
+
+typeText(letterText,
+"Chúc bạn một ngày 8/3 thật vui vẻ và luôn tràn ngập niềm vui.")
+
+}
+
+let index=0
+
+const messages=[
+
+"Bạn là một trong những điều dễ thương nhất.",
+"Mong rằng bạn luôn vui vẻ.",
+"Hy vọng bạn sẽ luôn mỉm cười.",
+"Chúc bạn thật nhiều may mắn.",
+"Cảm ơn vì đã làm thế giới dễ thương hơn.",
+"Chúc bạn một ngày 8/3 thật hạnh phúc."
+
+]
+
+function startGallery(){
+
+letterPage.style.display="none"
+gallery.style.display="flex"
+
+showPhoto()
+
+}
+
+function showPhoto(){
+
+photo.src=(index+1)+".jpg"
+
+typeText(msg,messages[index])
+
+}
+
+function nextPhoto(){
+
+clearTimeout(typingTimer)
+
+index++
+
+if(index<6){
+showPhoto()
+}else{
+gallery.style.display="none"
+startFinal()
+}
+
+}
+
+function startFinal(){
+
+finalPage.style.display="block"
+
+createOrbitImages()
+
+setTimeout(formHeart,4000)
+
+}
+
+function createOrbitImages(){
+
+for(let i=1;i<=6;i++){
+
+let img=document.createElement("img")
+img.src=i+".jpg"
+img.className="orbitImg"
+
+orbitContainer.appendChild(img)
+
+}
+
+let imgs=document.querySelectorAll(".orbitImg")
+
+let orbit=setInterval(()=>{
+
+imgs.forEach((img,i)=>{
+
+let angle=(Date.now()/600 + i*60)
+
+let x=window.innerWidth/2 + Math.cos(angle)*220
+let y=window.innerHeight/2 + Math.sin(angle)*160
+
+img.style.left=x+"px"
+img.style.top=y+"px"
+
+})
+
+},30)
+
+setTimeout(()=>clearInterval(orbit),4000)
+
+}
+
+function formHeart(){
+
+let imgs=document.querySelectorAll(".orbitImg")
+
+let heartPos=[
+[-60,-20],
+[-30,-60],
+[0,-80],
+[30,-60],
+[60,-20],
+[0,40]
+]
+
+imgs.forEach((img,i)=>{
+
+img.style.left="calc(50% + "+heartPos[i][0]+"px)"
+img.style.top="calc(50% + "+heartPos[i][1]+"px)"
+
+})
+
+setTimeout(()=>{
+imgs.forEach(img=>img.remove())
+showBigHeart()
+},2000)
+
+}
+
+function showBigHeart(){
+
+bigHeart.style.transform="translate(-50%,-50%) scale(1)"
+
+setTimeout(explodeHearts,1500)
+
+}
+
+function explodeHearts(){
+
+for(let i=0;i<120;i++){
+
+let heart=document.createElement("div")
+
+heart.className="smallHeart"
+heart.innerText="💖"
+
+heart.style.left="50%"
+heart.style.top="50%"
+
+heart.style.setProperty("--x",(Math.random()*1000-500)+"px")
+heart.style.setProperty("--y",(Math.random()*800-400)+"px")
+
+finalPage.appendChild(heart)
+
+}
+
+setTimeout(showFinalText,2000)
+
+}
+
+function showFinalText(){
+
+typeText(finalText,
+"Chúc bạn luôn thật nhiều niềm vui, luôn rạng rỡ như những bông hoa đẹp nhất trong khu vườn của cuộc sống.")
+
+setTimeout(()=>{
+specialText.style.opacity=1
+specialText.style.transform="scale(1)"
+},3500)
+
+}
+
+function floating(){
+
+let el=document.createElement("div")
+
+el.className="floating"
+
+let items=["💖","💗","💞","🌸"]
+
+el.innerText=items[Math.floor(Math.random()*items.length)]
+
+el.style.left=Math.random()*100+"vw"
+el.style.fontSize=(20+Math.random()*40)+"px"
+el.style.animationDuration=(6+Math.random()*6)+"s"
+
+document.body.appendChild(el)
+
+setTimeout(()=>el.remove(),12000)
+
+}
+
+setInterval(floating,300)
+
+</script>
+
+</body>
+</html>
